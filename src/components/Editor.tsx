@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Bold, Italic, Strikethrough, Heading, Quote, Code, List, ListOrdered, CheckSquare, Image, Link, Table, Minus, MessageSquare, ArrowDown, ArrowUp } from 'lucide-react';
 
 interface EditorProps {
@@ -6,13 +6,17 @@ interface EditorProps {
     onChange: (val: string) => void;
 }
 
-const EditorToolbar = () => {
+interface EditorToolbarProps {
+    onAction: (action: string) => void;
+}
+
+const EditorToolbar: React.FC<EditorToolbarProps> = ({ onAction }) => {
     const iconStyle = { padding: '6px', color: '#b9bbbe', opacity: 0.8 };
     const separatorStyle = { width: '1px', height: '16px', background: '#4f545c', margin: '0 4px' };
     
     return (
         <div style={{
-            height: '40px', // Slightly taller
+            height: '40px',
             backgroundColor: '#2f3136',
             borderBottom: '1px solid #111',
             display: 'flex',
@@ -20,28 +24,28 @@ const EditorToolbar = () => {
             padding: '0 8px',
             gap: '2px'
         }}>
-           <button style={iconStyle}><div style={{ transform: 'rotate(90deg)' }}>↩</div></button>
-           <button style={iconStyle}><div style={{ transform: 'rotate(-90deg)' }}>↪</div></button>
+           <button style={iconStyle} onClick={() => onAction('undo')}><div style={{ transform: 'rotate(90deg)' }}>↩</div></button>
+           <button style={iconStyle} onClick={() => onAction('redo')}><div style={{ transform: 'rotate(-90deg)' }}>↪</div></button>
            <div style={separatorStyle} />
-           <button style={iconStyle}><Bold size={16} /></button>
-           <button style={iconStyle}><Italic size={16} /></button>
-           <button style={iconStyle}><Strikethrough size={16} /></button>
-           <button style={iconStyle}><Heading size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('bold')}><Bold size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('italic')}><Italic size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('strikethrough')}><Strikethrough size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('heading')}><Heading size={16} /></button>
            <div style={separatorStyle} />
-           <button style={iconStyle}><Code size={16} /></button>
-           <button style={iconStyle}><Quote size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('code')}><Code size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('quote')}><Quote size={16} /></button>
            <div style={separatorStyle} />
-           <button style={iconStyle}><List size={16} /></button>
-           <button style={iconStyle}><ListOrdered size={16} /></button>
-           <button style={iconStyle}><CheckSquare size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('list-ul')}><List size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('list-ol')}><ListOrdered size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('task')}><CheckSquare size={16} /></button>
            <div style={separatorStyle} />
-           <button style={iconStyle}><Link size={16} /></button>
-           <button style={iconStyle}><Image size={16} /></button>
-           <button style={iconStyle}><Table size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('link')}><Link size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('image')}><Image size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('table')}><Table size={16} /></button>
            <div style={separatorStyle} />
-           <button style={iconStyle}><Minus size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('hr')}><Minus size={16} /></button>
            <div style={separatorStyle} />
-           <button style={iconStyle}><MessageSquare size={16} /></button>
+           <button style={iconStyle} onClick={() => onAction('comment')}><MessageSquare size={16} /></button>
         </div>
     );
 };
@@ -159,15 +163,86 @@ const TemplateOverlay = () => {
 const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
     const lineNumbers = value.split('\n').length;
     const lines = Array.from({ length: Math.max(1, lineNumbers) }, (_, i) => i + 1);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const handleAction = (action: string) => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = value;
+        
+        const before = text.substring(0, start);
+        const selected = text.substring(start, end);
+        const after = text.substring(end);
+        
+        let newText = text;
+        let newCursorPos = end;
+
+        switch (action) {
+            case 'bold':
+                newText = `${before}**${selected || 'bold text'}**${after}`;
+                newCursorPos = end + (selected ? 2 : 11);
+                break;
+            case 'italic':
+                newText = `${before}*${selected || 'italic text'}*${after}`;
+                newCursorPos = end + (selected ? 1 : 13);
+                break;
+            case 'strikethrough':
+                newText = `${before}~~${selected || 'strikethrough text'}~~${after}`;
+                newCursorPos = end + (selected ? 2 : 20);
+                break;
+            case 'heading':
+                newText = `${before}# ${selected || 'Heading'}${after}`;
+                newCursorPos = end + 2;
+                break;
+            case 'code':
+                newText = `${before}\`${selected || 'code'}\`${after}`;
+                break;
+            case 'quote':
+                newText = `${before}> ${selected || 'Blockquote'}${after}`;
+                break;
+            case 'list-ul':
+                newText = `${before}- ${selected || 'List item'}${after}`;
+                break;
+            case 'list-ol':
+                newText = `${before}1. ${selected || 'List item'}${after}`;
+                break;
+            case 'task':
+                newText = `${before}- [ ] ${selected || 'Task item'}${after}`;
+                break;
+            case 'link':
+                newText = `${before}[${selected || 'Link'}](url)${after}`;
+                break;
+            case 'image':
+                newText = `${before}![${selected || 'Image'}](url)${after}`;
+                break;
+            case 'table':
+                newText = `${before}\n| Header | Header |\n| --- | --- |\n| Cell | Cell |\n${after}`;
+                break;
+            case 'hr':
+                newText = `${before}\n---\n${after}`;
+                break;
+             // undo/redo not implemented with history stack yet, can be done if requested
+        }
+
+        onChange(newText);
+        
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(newCursorPos, newCursorPos);
+        }, 0);
+    };
 
     return (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#1e1e1e' }}>
-            <EditorToolbar />
+            <EditorToolbar onAction={handleAction} />
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
                 {/* Line Numbers */}
                 <div style={{ 
                     width: '40px', 
-                    padding: '12px 0', // Match textarea padding
+                    padding: '12px 0', 
                     textAlign: 'right', 
                     color: '#4f545c', 
                     backgroundColor: '#1e1e1e', 
@@ -181,9 +256,10 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
                    ))}
                 </div>
                 
-                {/* Content Container to hold textarea and overlay */}
+                {/* Content Container */}
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative' }}>
                     <textarea 
+                        ref={textareaRef}
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
                         placeholder="Jot down your ideas and grow them 💡"
@@ -201,18 +277,10 @@ const Editor: React.FC<EditorProps> = ({ value, onChange }) => {
                             padding: '12px',
                             whiteSpace: 'pre-wrap',
                             overflow: 'auto',
-                            zIndex: 2, // Above overlay if needed, but transparent bg?
+                            zIndex: 2, 
                             background: 'transparent'
                         }}
                     />
-                    
-                    {/* Only show overlay if content is relatively short or empty? 
-                        In the screenshot, there is text on line 1, but the overlay is still visible at the bottom.
-                        So it stays there? Or maybe it's just content in the file?
-                        "Link to GitHub:" text is NOT editable in the screenshot area?
-                        Actually, looking closely at the screenshot, the "Link to GitHub" part is likely OUTSIDE the textarea flow or simply a bottom overlay.
-                        I will make it a bottom overlay inside the flex container.
-                    */}
                     <TemplateOverlay />
                 </div>
             </div>
