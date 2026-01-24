@@ -126,3 +126,27 @@ Use the provided image as the **absolute authority** and replicate it **exactly*
 
 # Screenshots:
 
+## Hackmd Antigravity Coding Init:
+<img width="3200" height="1800" alt="hackmd-clone-coding-antigravity" src="https://github.com/user-attachments/assets/3abe14d9-e00e-492e-aca9-384aed81aa5b" />
+
+<img width="3200" height="1800" alt="hackmd-init-2-antrigravity" src="https://github.com/user-attachments/assets/9d7481ed-9c99-47e7-9fab-3d712fa50d31" />
+
+<img width="3200" height="1800" alt="hackmd-init-antigravity" src="https://github.com/user-attachments/assets/0cd22032-f0b5-4ac3-9978-3e59dae616ba" />
+
+## UI follow up:
+<img width="3200" height="1800" alt="hackmd-clone-follow-up" src="https://github.com/user-attachments/assets/7e33e806-ba5d-4b89-bf37-474c6b0f7d7a" />
+
+## Initial generated UI:
+<img width="3172" height="1482" alt="hackmd-clone-initial-generated-ui" src="https://github.com/user-attachments/assets/ad8f26cd-6f24-4889-b137-0b60dfef264e" />
+
+## Velt Addition:
+
+<img width="3200" height="1800" alt="velt-addition-antigravity" src="https://github.com/user-attachments/assets/2a9568a2-b9f6-4090-a887-e70902d18275" />
+
+<img width="3200" height="1800" alt="velt-antigravity-adding-comments" src="https://github.com/user-attachments/assets/56019615-31b3-41a2-a0a7-6c7e4f0ce466" />
+
+<img width="3200" height="1800" alt="velt-live-sync-integration-antigravity" src="https://github.com/user-attachments/assets/a8cfe32f-ca5a-45cc-9e39-c444fc3a9846" />
+
+
+
+
