@@ -3,8 +3,15 @@ import Header from './Header';
 import Editor from './Editor';
 import Preview from './Preview';
 import StatusBar from './StatusBar';
+import type { VeltUser } from '../types/veltUser';
 
-const Layout: React.FC = () => {
+interface LayoutProps {
+    currentUser: VeltUser;
+    staticUsers: VeltUser[];
+    onSwitchUser: (user: VeltUser) => void;
+}
+
+const Layout: React.FC<LayoutProps> = ({ currentUser, staticUsers, onSwitchUser }) => {
     const [markdown, setMarkdown] = useState('');
 
     return (
@@ -15,7 +22,7 @@ const Layout: React.FC = () => {
             width: '100vw',
             overflow: 'hidden'
         }}>
-            <Header />
+            <Header currentUser={currentUser} staticUsers={staticUsers} onSwitchUser={onSwitchUser} />
             <div style={{
                 display: 'flex',
                 flex: 1,

@@ -1,20 +1,29 @@
-import React from 'react';
-import { 
-  Pencil, 
-  Columns, 
-  Eye, 
-  Plus, 
-  HelpCircle, 
-  Search, 
-  Info, 
-  Tag, 
-  Clock, 
-  MoreHorizontal, 
-  ChevronDown, 
-  Power 
+import React, { useState } from 'react';
+import {
+  Pencil,
+  Columns,
+  Eye,
+  Plus,
+  HelpCircle,
+  Search,
+  Info,
+  Tag,
+  Clock,
+  MoreHorizontal,
+  ChevronDown,
+  Power
 } from 'lucide-react';
+import { VeltPresence } from '@veltdev/react';
+import type { VeltUser } from '../types/veltUser';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    currentUser: VeltUser;
+    staticUsers: VeltUser[];
+    onSwitchUser: (user: VeltUser) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ currentUser, staticUsers, onSwitchUser }) => {
+    const [showUserMenu, setShowUserMenu] = useState(false);
     return (
         <div style={{
             height: 'var(--toolbar-height)',
@@ -82,27 +91,133 @@ const Header: React.FC = () => {
 
             {/* Right Section */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{
-                        width: '28px', 
-                        height: '28px', 
-                        borderRadius: '50%', 
-                        background: '#3370b7', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center'
-                    }}>
-                         <Power size={16} color="white" />
-                    </div>
-                    <ChevronDown size={14} />
+                 {/* Velt Presence Component */}
+                 <div style={{ display: 'flex', alignItems: 'center' }}>
+                     <VeltPresence />
                  </div>
-                 
+
+                 {/* User Switcher */}
+                 <div style={{ position: 'relative' }}>
+                     <div
+                         onClick={() => setShowUserMenu(!showUserMenu)}
+                         style={{
+                             display: 'flex',
+                             alignItems: 'center',
+                             gap: '4px',
+                             cursor: 'pointer'
+                         }}
+                     >
+                         <img
+                             src={currentUser.photoUrl}
+                             alt={currentUser.name}
+                             style={{
+                                 width: '28px',
+                                 height: '28px',
+                                 borderRadius: '50%',
+                                 objectFit: 'cover',
+                                 border: '2px solid #5865f2'
+                             }}
+                         />
+                         <ChevronDown size={14} />
+                     </div>
+
+                     {showUserMenu && (
+                         <div style={{
+                             position: 'absolute',
+                             top: '100%',
+                             right: 0,
+                             marginTop: '8px',
+                             background: '#2f3136',
+                             border: '1px solid #202225',
+                             borderRadius: '8px',
+                             padding: '8px',
+                             minWidth: '200px',
+                             boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                             zIndex: 1000
+                         }}>
+                             <div style={{
+                                 fontSize: '11px',
+                                 color: '#72767d',
+                                 textTransform: 'uppercase',
+                                 fontWeight: 600,
+                                 marginBottom: '8px',
+                                 padding: '0 8px'
+                             }}>
+                                 Switch User
+                             </div>
+                             {staticUsers.map((user) => (
+                                 <div
+                                     key={user.userId}
+                                     onClick={() => {
+                                         onSwitchUser(user);
+                                         setShowUserMenu(false);
+                                     }}
+                                     style={{
+                                         display: 'flex',
+                                         alignItems: 'center',
+                                         gap: '10px',
+                                         padding: '8px',
+                                         borderRadius: '4px',
+                                         cursor: 'pointer',
+                                         background: currentUser.userId === user.userId ? '#5865f2' : 'transparent',
+                                         transition: 'background 0.2s'
+                                     }}
+                                     onMouseEnter={(e) => {
+                                         if (currentUser.userId !== user.userId) {
+                                             e.currentTarget.style.background = '#3f4147';
+                                         }
+                                     }}
+                                     onMouseLeave={(e) => {
+                                         if (currentUser.userId !== user.userId) {
+                                             e.currentTarget.style.background = 'transparent';
+                                         }
+                                     }}
+                                 >
+                                     <img
+                                         src={user.photoUrl}
+                                         alt={user.name}
+                                         style={{
+                                             width: '32px',
+                                             height: '32px',
+                                             borderRadius: '50%',
+                                             objectFit: 'cover'
+                                         }}
+                                     />
+                                     <div style={{ flex: 1 }}>
+                                         <div style={{
+                                             color: '#fff',
+                                             fontWeight: 500,
+                                             fontSize: '14px'
+                                         }}>
+                                             {user.name}
+                                         </div>
+                                         <div style={{
+                                             color: '#b9bbbe',
+                                             fontSize: '12px'
+                                         }}>
+                                             {user.email}
+                                         </div>
+                                     </div>
+                                     {currentUser.userId === user.userId && (
+                                         <div style={{
+                                             width: '8px',
+                                             height: '8px',
+                                             borderRadius: '50%',
+                                             background: '#43b581'
+                                         }} />
+                                     )}
+                                 </div>
+                             ))}
+                         </div>
+                     )}
+                 </div>
+
                  <button><Clock size={18} /></button>
-                 
-                 <button style={{ 
-                     background: '#5865f2', // Blurple branding
-                     color: 'white', 
-                     padding: '4px 12px', 
+
+                 <button style={{
+                     background: '#5865f2',
+                     color: 'white',
+                     padding: '4px 12px',
                      borderRadius: '4px',
                      fontWeight: 500,
                      display: 'flex',
@@ -112,7 +227,7 @@ const Header: React.FC = () => {
                  }}>
                     <div style={{ transform: 'rotate(180deg)' }}>➜</div> Share
                  </button>
-                 
+
                  <button><MoreHorizontal size={20} /></button>
             </div>
         </div>
