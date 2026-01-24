@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { VeltProvider, useVeltClient } from '@veltdev/react';
+import { VeltProvider, useVeltClient, VeltComments } from '@veltdev/react';
 import Layout from './components/Layout';
 import type { VeltUser } from './types/veltUser';
 
@@ -77,6 +77,7 @@ function App() {
 
   return (
     <VeltProvider apiKey={apiKey}>
+      <VeltComments textMode={true} />
       <AppContent
         currentUser={currentUser}
         staticUsers={staticUsers}

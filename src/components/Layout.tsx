@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useLiveState } from '@veltdev/react';
 import Header from './Header';
 import Editor from './Editor';
 import Preview from './Preview';
 import StatusBar from './StatusBar';
 import type { VeltUser } from '../types/veltUser';
+import { defaultMarkdown } from '../constants/defaultTemplate';
 
 interface LayoutProps {
     currentUser: VeltUser;
@@ -12,7 +14,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ currentUser, staticUsers, onSwitchUser }) => {
-    const [markdown, setMarkdown] = useState('');
+    const [markdown, setMarkdown] = useLiveState<string>('hackmd-clone-markdown', defaultMarkdown);
 
     return (
         <div style={{

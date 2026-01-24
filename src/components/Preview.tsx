@@ -37,11 +37,11 @@ const Preview: React.FC<PreviewProps> = ({ content }) => {
                 }}>
                     <Power size={10} color="white" />
                 </div>
-                <span>Created a few seconds ago</span>
+                <span>Changed 2 days ago</span>
 
                 <div style={{ flex: 1 }} />
                 
-                <div style={{ display: 'flex', gap: '16px', opacity: 0.7 }}>
+                <div style={{ display: 'flex', gap: '12px', opacity: 0.7, color: '#aaa' }}>
                      <Heart size={16} />
                      <Bookmark size={16} />
                      <Bell size={16} />

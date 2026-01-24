@@ -63,15 +63,15 @@ const Header: React.FC<HeaderProps> = ({ currentUser, staticUsers, onSwitchUser 
                 <div style={{ width: '1px', height: '20px', background: '#4f545c', margin: '0 4px' }}></div>
 
                 {/* Editor Mode Buttons */}
-                <div style={{ display: 'flex', background: '#202225', borderRadius: '4px', padding: '2px' }}>
-                    <button style={{ padding: '4px 8px', background: '#3f4147', borderRadius: '3px', color: '#fff' }}>
-                        <Pencil size={16} />
+                <div style={{ display: 'flex', background: '#333', borderRadius: '4px', padding: '2px' }}>
+                    <button style={{ padding: '4px 8px', background: '#444', borderRadius: '3px', color: '#fff' }}>
+                        <Pencil size={14} />
                     </button>
-                    <button style={{ padding: '4px 8px' }}>
-                        <Columns size={16} />
+                    <button style={{ padding: '4px 8px', color: '#888' }}>
+                        <Columns size={14} />
                     </button>
-                    <button style={{ padding: '4px 8px' }}>
-                        <Eye size={16} />
+                    <button style={{ padding: '4px 8px', color: '#888' }}>
+                        <Eye size={14} />
                     </button>
                 </div>
 
@@ -215,9 +215,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser, staticUsers, onSwitchUser 
                  <button><Clock size={18} /></button>
 
                  <button style={{
-                     background: '#5865f2',
+                     background: '#5865f2', // Matching the image's blue
                      color: 'white',
-                     padding: '4px 12px',
+                     padding: '6px 16px',
                      borderRadius: '4px',
                      fontWeight: 500,
                      display: 'flex',
@@ -225,7 +225,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser, staticUsers, onSwitchUser 
                      gap: '6px',
                      fontSize: '13px'
                  }}>
-                    <div style={{ transform: 'rotate(180deg)' }}>➜</div> Share
+                    <div style={{ transform: 'rotate(0deg)' }}>Share</div>
                  </button>
 
                  <button><MoreHorizontal size={20} /></button>
