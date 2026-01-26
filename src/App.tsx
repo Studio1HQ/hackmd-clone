@@ -77,7 +77,7 @@ function App() {
 
   return (
     <VeltProvider apiKey={apiKey}>
-      <VeltComments textMode={true} />
+      <VeltComments textMode={true} darkMode={true} />
       <AppContent
         currentUser={currentUser}
         staticUsers={staticUsers}
